@@ -1,32 +1,17 @@
-import React, { ReactNode } from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
+import React from 'react';
+import Sidebar from './Sidebar';
 
-type Props = {
-  children?: ReactNode
-  title?: string
-}
+type LayoutProps = {
+  children: React.ReactNode;
+};
 
-const Layout = ({ children, title = 'This is the default title' }: Props) => (
-  <div>
-    <Head>
-      <title>{title}</title>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-    <header>
-      <nav>
-        <Link href="/">Home</Link> | <Link href="/about">About</Link> |{' '}
-        <Link href="/users">Users List</Link> |{' '}
-        <a href="/api/users">Users API</a>
-      </nav>
-    </header>
-    {children}
-    <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
-    </footer>
-  </div>
-)
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  return (
+    <div dir="rtl" className="min-h-screen flex">
+      <Sidebar />
+      <main className="w-full">{children}</main>
+    </div>
+  );
+};
 
-export default Layout
+export default Layout;
