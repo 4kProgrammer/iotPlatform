@@ -1,56 +1,49 @@
-import { useEffect } from "react";
-import Head from "next/head";
-import Chart from "../components/Dashboard/Chart";
-import Widget from "../components/Dashboard/Widget";
-import styles from '../styles/Home.module.css';
+import React, { useState } from 'react';
+import Head from 'next/head';
+import ChartSection from '../components/Dashboard/Chart';
+import Widget from '../components/Dashboard/Widget';
+import Sidebar from '../components/Sidebar';
+import homeStyles from '../styles/Home.module.css';
 
-export default function Home() {
+const IndexPage = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Dashboard</title>
       </Head>
-
-      {/* Dashboard */}
-      <div className={styles.main}>
-        <div className={styles.dashboard}>
-          <h2 className={styles.dashboardTitle}>Real-time Data</h2>
-          <div className={styles.widgetGrid}>
-            <Widget title="Temperature" value="25°C" />
-            <Widget title="Humidity" value="60%" />
-            <Widget title="Pressure" value="1013 hPa" />
-            <Widget title="Air Quality" value="Good" />
+      <div className={homeStyles.container}>
+        <header className={homeStyles.header}>
+          <div className={homeStyles.headerContent}>
+            <h1 className={homeStyles.dashboardTitle}>Dashboard</h1>
+            <button className={homeStyles.headerMenuButton} onClick={toggleSidebar}>
+              <span className="material-icons">menu</span>
+            </button>            
           </div>
-          <div className={styles.chartWrapper}>
-            <h3 className={styles.chartTitle}>Chart</h3>
-            <Chart />
+        </header>
+        <div className={homeStyles.content}>
+          {isSidebarOpen && <Sidebar />}
+          <div className={homeStyles.mainContent}>
+            <h2 className={homeStyles.dashboardTitle}>Dashboard</h2>
+            <ChartSection />
+            <div className={homeStyles.widgetWrapper}>
+              <div className={homeStyles.widgets}>
+                <Widget title="Temperature" value="72°F" />
+                <Widget title="Humidity" value="45%" />
+                <Widget title="Pressure" value="1013 hPa" />
+                <Widget title="Wind Speed" value="5 mph" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Sidebar */}
-      <div className={styles.sidebar}>
-        <h2 className={styles.sidebarTitle}>Dashboard</h2>
-        <nav>
-          <ul>
-            <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
-                Profile
-              </a>
-            </li>
-            <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
-                Add Devices
-              </a>
-            </li>
-            <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
-                Logout
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
+    </>
   );
-}
+};
+
+export default IndexPage;

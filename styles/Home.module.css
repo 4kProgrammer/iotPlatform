@@ -1,95 +1,83 @@
 .container {
   display: flex;
-  min-height: 100vh;
-  background-color: #f3f4f6;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.main {
-  flex-grow: 1;
-  padding: 2rem;
+.header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem;
 }
 
-.dashboard {
-  max-width: 7xl;
-  margin: 0 auto;
+.headerContent {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .dashboardTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin: 0;
 }
 
-.widgetGrid {
+.headerMenuButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  outline: none;
+  padding: 0;
+}
+
+.content {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 1rem;
+}
+
+
+.widgets {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  margin-top: 1rem;
 }
 
-@media (min-width: 640px) {
-  .widgetGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Media Queries for responsiveness */
+@media (max-width: 767px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .mainContent {
+    order: 1;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .widgets {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
-  .widgetGrid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .widgets {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 }
-
-.chartWrapper {
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-}
-
-.chartTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.sidebar {
-  width: 20rem;
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  border-radius: 0.5rem;
-}
-
-.sidebarTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.menuItem {
-  list-style-type: none;
-  padding: 0.5rem 0;
-}
-
-.menuLink {
-  text-decoration: none;
-  color: #2d3748;
-  font-size: 1.125rem;
-  font-weight: 500;
-}
-
-.menuLink:hover {
-  color: #4a5568;
-  text-decoration: underline;
-}
-.widget {
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  border-radius: 0.5rem;
+.widgetWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
 }
-
