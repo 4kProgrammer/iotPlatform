@@ -1,0 +1,39 @@
+/* Layout.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+    direction: rtl;
+  }
+  
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    padding: 1rem;
+    position: relative;
+    width: 100%;
+  }
+  
+  @media (max-width: 767px) {
+    .content {
+      flex-direction: column;
+    }
+  
+    .main {
+      order: 1;
+    }
+  }
+  

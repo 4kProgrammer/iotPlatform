@@ -1,7 +1,11 @@
-import { createContext } from "react";
+import { createContext } from 'react';
 
-export const ScreenContext = createContext<{
+type ScreenContextType = {
   isSidebarOpen: boolean;
-}>({
+  setIsSidebarOpen: (value: boolean) => void;
+};
+
+export const ScreenContext = createContext<ScreenContextType>({
   isSidebarOpen: false,
+  setIsSidebarOpen: () => {},
 });

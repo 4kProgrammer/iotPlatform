@@ -1,22 +1,39 @@
-import React from 'react';
-import Sidebar from './Sidebar';
+// components/Layout.tsx
+
+import React, { useState, useContext } from 'react';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
-//import './Layout.module.css';
-
+import Sidebar from './Sidebar';
+import layoutStyles from './Layout.module.css';
+import { ScreenContext } from '../context/screen-context';
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const screenContextValue = {
+    isSidebarOpen,
+    setIsSidebarOpen,
+  };
+
   return (
-    <div dir="rtl" className="min-h-screen flex">
-       <Header />
-      <Sidebar />
-      <main className="w-full">{children}</main>
-      <Footer />
-    </div>
+    <ScreenContext.Provider value={screenContextValue}>
+      <div className={layoutStyles.container}>
+        <Header toggleSidebar={toggleSidebar} />
+        <div className={layoutStyles.content}>
+          <Sidebar isOpen={isSidebarOpen} />
+          <main className={layoutStyles.main}>{children}</main>
+        </div>
+        <Footer />
+      </div>
+    </ScreenContext.Provider>
   );
 };
 

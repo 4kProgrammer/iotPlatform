@@ -1,10 +1,21 @@
-import React from 'react';
-//import './Header.module.css';
+// components/Header/Header.tsx
 
-const Header: React.FC = () => {
+import React from 'react';
+import headerStyles from './Header.module.css';
+
+type HeaderProps = {
+  toggleSidebar: () => void;
+};
+
+const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   return (
-    <header>
-      {/* Your header content here */}
+    <header className={headerStyles.header}>
+      <div className={headerStyles.headerContent}>
+        <h1 className={headerStyles.dashboardTitle}>Dashboard</h1>
+        <button className={headerStyles.headerMenuButton} onClick={toggleSidebar}>
+          <span className="material-icons">menu</span>
+        </button>
+      </div>
     </header>
   );
 };

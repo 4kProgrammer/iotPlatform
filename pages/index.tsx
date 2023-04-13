@@ -1,13 +1,13 @@
 // pages/index.tsx
 
-import React, { useState, useEffect,useMemo  } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import ChartSection from '../components/Dashboard/Chart';
 import Widget from '../components/Dashboard/Widget';
 import Sidebar from '../components/Sidebar';
 import homeStyles from '../styles/Home.module.css';
 import { ScreenContext } from "../context/screen-context";
-import Footer from '../components/Footer/Footer';
+import Layout from '../components/Layout';
 
 const isLandscape = () => {
   if (typeof window !== 'undefined') {
@@ -44,23 +44,10 @@ const IndexPage = () => {
 
   const screenContextValue = useMemo(() => ({ isSidebarOpen }), [isSidebarOpen]);
 
-
-  return (
-    <ScreenContext.Provider value={screenContextValue}>
-      <Head>
-        <title>Dashboard</title>
-      </Head>
-      <div className={homeStyles.container}>
-        <header className={homeStyles.header}>
-          <div className={homeStyles.headerContent}>
-            <h1 className={homeStyles.dashboardTitle}>Dashboard</h1>
-            <button className={homeStyles.headerMenuButton} onClick={toggleSidebar}>
-              <span className="material-icons">menu</span>
-            </button>
-          </div>
-        </header>
+  return ( 
+      <Layout toggleSidebar={toggleSidebar}>
         <div className={homeStyles.content}>
-        <Sidebar isOpen={isSidebarOpen} isPortrait={isPortrait} />
+          <Sidebar isOpen={isSidebarOpen} isPortrait={isPortrait} />
           <div className={homeStyles.mainContent}>
             <h2 className={homeStyles.dashboardTitle}>Dashboard</h2>
             <div className={homeStyles.chartContainer}>
@@ -76,10 +63,9 @@ const IndexPage = () => {
             </div>
           </div>
         </div>
-      </div>
-      {isPortrait && <Footer />}
-      </ScreenContext.Provider>
+      </Layout>
   );
 };
 
 export default IndexPage;
+

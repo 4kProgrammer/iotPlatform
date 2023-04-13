@@ -73,3 +73,16 @@
   padding-top: 1rem;
   margin-top: 1rem;
 }
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 250px;
+  height: 100vh;
+  z-index: 1000;
+  transition: right 0.3s ease-in-out;
+}
+
+.open.drawer {
+  right: 0;
+}
