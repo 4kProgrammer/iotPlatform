@@ -1,50 +1,56 @@
-.container {
+.widgetContainer {
+  background-color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-}
-
-.header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-  padding: 1rem;
-}
-
-.headerContent {
   align-items: center;
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
-.dashboardTitle {
-  margin: 0;
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
 }
 
-.headerMenuButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 24px;
-  outline: none;
-  padding: 0;
+.value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c5282;
 }
 
-.content {
-  display: flex;
-  flex-grow: 1;
-  overflow: hidden;
+/* Responsive styles for larger screens */
+@media (min-width: 768px) {
+  .widgetContainer {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .value {
+    font-size: 2rem;
+  }
 }
 
-.mainContent {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 1rem;
-}
+/* Responsive styles for even larger screens */
+@media (min-width: 1024px) {
+  .widgetContainer {
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
 
-.widgets {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  margin-top: 1rem;
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .value {
+    font-size: 2.5rem;
+  }
 }

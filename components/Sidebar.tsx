@@ -1,9 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
+import sidebarStyles from './Sidebar.module.css';
 
-const Sidebar = () => {
+interface SidebarProps {
+  open: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ open }) => {
   return (
-    <aside className="bg-gray-800 text-white w-64 py-4 px-6">
+    <aside className={`${sidebarStyles.sidebar} ${open ? sidebarStyles.open : ''}`}>
       <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
       <nav className="space-y-4">
         <Link href="/">

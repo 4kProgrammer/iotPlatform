@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
+import chartStyles from '../../styles/Chart.module.css';
 
 Chart.register(...registerables);
 
@@ -34,9 +35,8 @@ const ChartComponent = () => {
   };
 
   return (
-    <div>
-      <h2>Line Example</h2>
-      <Line data={data} options={options} />
+    <div className={chartStyles.chartContainer}>
+      <Line  className={chartStyles.chartContainer} data={data} options={options} />
     </div>
   );
 };
