@@ -1,0 +1,150 @@
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    height: 60px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+    .footer {
+        display: none;
+    }
+}
+
+.footer span.material-icons {
+    font-size: 24px;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.footerNav {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.footerNav li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.5rem;
+}
+
+.footerDrawer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    padding: 1rem;
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    width: 100%;
+    /* Update this to make the drawer width 100% */
+}
+
+.footerDrawer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footerDrawer li {
+    background-color: #e9ecef;
+    border-radius: 8px;
+    color: #212529;
+    font-size: 16px;
+    margin-bottom: 8px;
+    padding: 10px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.footerDrawer li:hover {
+    background-color: #ced4da;
+    cursor: pointer;
+}
+
+
+.footerButton {
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: #212529;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    padding: 8px 16px;
+    text-align: center;
+    transition: color 0.2s ease;
+}
+
+.footerButton:hover {
+    color: #007bff;
+}
+
+.footerButton span.material-icons {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.footerButton span.text {
+    font-size: 12px;
+}
+
+.moreDrawer {
+    padding: 1rem;
+    /* Add padding for better appearance */
+}
+
+.moreNav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns here */
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    /* Add this to make the grid items span the full width of the drawer */
+}
+
+.moreNavItem {
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.moreNavItem:hover {
+    background-color: #e9ecef;
+    cursor: pointer;
+}
+
+.moreNavItem span.material-icons {
+    font-size: 24px;
+    margin-bottom: 0.5rem;
+}
+
+.moreNavItem p {
+    margin: 0;
+    font-size: 14px;
+}

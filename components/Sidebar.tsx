@@ -1,36 +1,72 @@
-import React from 'react';
-import Link from 'next/link';
-import sidebarStyles from './Sidebar.module.css';
+import React, { useContext } from "react";
+import { ScreenContext } from "../context/screen-context";
+import sidebarStyles from "./Sidebar.module.css";
+import 'material-icons/css/material-icons.min.css';
 
-interface SidebarProps {
-  open: boolean;
-}
+const navItems = [
+  { id: 1, title: "Profile", icon: "account_circle", handler: "handleProfile" },
+  { id: 2, title: "Add Device", icon: "add_box", handler: "handleAddDevice" },
+  { id: 3, title: "Schedule", icon: "schedule", handler: "handleSchedule" },
+  { id: 4, title: "Logout", icon: "logout", handler: "handleLogout" }
+];
 
-const Sidebar: React.FC<SidebarProps> = ({ open }) => {
+const Sidebar = () => {
+  const { isSidebarOpen } = useContext(ScreenContext);
+
+  const sidebarClassName = isSidebarOpen
+    ? `${sidebarStyles.sidebar} ${sidebarStyles.show}`
+    : sidebarStyles.sidebar;
+
+  const handleProfile = () => {
+    console.log("Profile clicked");
+  };
+
+  const handleAddDevice = () => {
+    console.log("Add Device clicked");
+  };
+
+  const handleSchedule = () => {
+    console.log("Schedule clicked");
+  };
+
+  const handleLogout = () => {
+    console.log("Logging out...");
+  };
+
+  const handleClick = (handler: string) => {
+    switch (handler) {
+      case "handleProfile":
+        handleProfile();
+        break;
+      case "handleAddDevice":
+        handleAddDevice();
+        break;
+      case "handleSchedule":
+        handleSchedule();
+        break;
+      case "handleLogout":
+        handleLogout();
+        break;
+      default:
+        console.log("Unknown handler");
+    }
+  };
+
   return (
-    <aside className={`${sidebarStyles.sidebar} ${open ? sidebarStyles.open : ''}`}>
-      <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
-      <nav className="space-y-4">
-        <Link href="/">
-          <div className="flex items-center space-x-2 cursor-pointer">
-            <svg className="w-6 h-6" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M3,13H21V11H3V13Z" />
-              <path fill="currentColor" d="M3,18H21V16H3V18Z" />
-              <path fill="currentColor" d="M3,6V8H21V6H3Z" />
-            </svg>
-            <span>Home</span>
-          </div>
-        </Link>
-        <Link href="/profile">
-          <div className="flex items-center space-x-2 cursor-pointer">
-            <svg className="w-6 h-6" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M12,12A5,5 0 0,1 17,17A5,5 0 0,1 12,22A5,5 0 0,1 7,17A5,5 0 0,1 12,12M12,14A3,3 0 0,0 9,17A3,3 0 0,0 12,20A3,3 0 0,0 15,17A3,3 0 0,0 12,14Z" />
-              <path fill="currentColor" d="M18,8H20V10H18V8M18,2H20V4H18V2M18,14H20V16H18V14M4,8H6V10H4V8M4,14H6V16H4V14M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M4,2H6V4H4V2Z" />
-            </svg>
-            <span>Profile</span>
-          </div>
-        </Link>
+    <aside className={sidebarClassName}>
+      <nav className={sidebarStyles.nav}>
+        <ul>
+          {navItems.map((item) => (
+            <li key={item.id} onClick={() => handleClick(item.handler)}>
+              <span className="material-icons">{item.icon}</span>
+              {item.title}
+            </li>
+          ))}
+        </ul>
       </nav>
+      <div className={sidebarStyles.softwareInfo}>
+        <p>Software Name v1.0.0</p>
+      </div>
     </aside>
   );
 };

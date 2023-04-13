@@ -33,10 +33,11 @@
 
 .content {
   display: flex;
+  flex-direction: row;
   flex-grow: 1;
   overflow: hidden;
   overflow-y: auto;
-  max-height: 100vh;
+  max-height: calc(100vh - 60px);
   direction: rtl;
 }
 
@@ -47,6 +48,7 @@
   max-height: calc(100vh - 60px);
   overflow-y: auto;
   padding: 1rem;
+  position: relative;
   width: 100%;
 }
 
@@ -90,4 +92,23 @@
   .widgets {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.footer span.material-icons {
+  font-size: 24px;
+  color: #6c757d;
 }

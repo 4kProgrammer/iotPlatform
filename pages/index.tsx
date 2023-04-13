@@ -1,11 +1,13 @@
 // pages/index.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo  } from 'react';
 import Head from 'next/head';
 import ChartSection from '../components/Dashboard/Chart';
 import Widget from '../components/Dashboard/Widget';
 import Sidebar from '../components/Sidebar';
 import homeStyles from '../styles/Home.module.css';
+import { ScreenContext } from "../context/screen-context";
+import Footer from '../components/Footer/Footer';
 
 const isLandscape = () => {
   if (typeof window !== 'undefined') {
@@ -16,18 +18,21 @@ const isLandscape = () => {
 
 const IndexPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isPortrait, setIsPortrait] = useState(!isLandscape());
 
   useEffect(() => {
     setIsSidebarOpen(isLandscape());
+    setIsPortrait(!isLandscape());
 
     const handleResize = () => {
       setIsSidebarOpen(isLandscape());
+      setIsPortrait(!isLandscape());
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -37,22 +42,25 @@ const IndexPage = () => {
     }
   };
 
+  const screenContextValue = useMemo(() => ({ isSidebarOpen }), [isSidebarOpen]);
+
+
   return (
-    <>
+    <ScreenContext.Provider value={screenContextValue}>
       <Head>
         <title>Dashboard</title>
       </Head>
       <div className={homeStyles.container}>
-        <Sidebar open={isSidebarOpen} />
+        <header className={homeStyles.header}>
+          <div className={homeStyles.headerContent}>
+            <h1 className={homeStyles.dashboardTitle}>Dashboard</h1>
+            <button className={homeStyles.headerMenuButton} onClick={toggleSidebar}>
+              <span className="material-icons">menu</span>
+            </button>
+          </div>
+        </header>
         <div className={homeStyles.content}>
-          <header className={homeStyles.header}>
-            <div className={homeStyles.headerContent}>
-              <h1 className={homeStyles.dashboardTitle}>Dashboard</h1>
-              <button className={homeStyles.headerMenuButton} onClick={toggleSidebar}>
-                <span className="material-icons">menu</span>
-              </button>
-            </div>
-          </header>
+        <Sidebar isOpen={isSidebarOpen} isPortrait={isPortrait} />
           <div className={homeStyles.mainContent}>
             <h2 className={homeStyles.dashboardTitle}>Dashboard</h2>
             <div className={homeStyles.chartContainer}>
@@ -69,7 +77,8 @@ const IndexPage = () => {
           </div>
         </div>
       </div>
-    </>
+      {isPortrait && <Footer />}
+      </ScreenContext.Provider>
   );
 };
 
