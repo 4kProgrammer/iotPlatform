@@ -28,7 +28,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className={layoutStyles.container}>
         <Header toggleSidebar={toggleSidebar} />
         <div className={layoutStyles.content}>
-          <Sidebar isOpen={isSidebarOpen} />
+          <Sidebar  />
           <main className={layoutStyles.main}>{children}</main>
         </div>
         <Footer />

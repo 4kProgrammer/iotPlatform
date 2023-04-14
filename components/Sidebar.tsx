@@ -2,12 +2,14 @@ import React, { useContext } from "react";
 import { ScreenContext } from "../context/screen-context";
 import sidebarStyles from "./Sidebar.module.css";
 import 'material-icons/css/material-icons.min.css';
+import Link from 'next/link';
 
 const navItems = [
-  { id: 1, title: "Profile", icon: "account_circle", handler: "handleProfile" },
-  { id: 2, title: "Add Device", icon: "add_box", handler: "handleAddDevice" },
-  { id: 3, title: "Schedule", icon: "schedule", handler: "handleSchedule" },
-  { id: 4, title: "Logout", icon: "logout", handler: "handleLogout" }
+  { id: 0, title: "Dashboard", icon: "dashboard", handler: "handleDashboard", path: "/" },
+  { id: 1, title: "Profile", icon: "account_circle", handler: "handleProfile", path: "/profile" },
+  { id: 2, title: "Add Device", icon: "add_box", handler: "handleAddDevice", path: "/add-device" },
+  { id: 3, title: "Schedule", icon: "schedule", handler: "handleSchedule", path: "/schedule" },
+  { id: 4, title: "Logout", icon: "logout", handler: "handleLogout", path: "/logout" }
 ];
 
 const Sidebar = () => {
@@ -33,8 +35,15 @@ const Sidebar = () => {
     console.log("Logging out...");
   };
 
+  const handleDashboard = () => {
+    console.log("Dashboard clicked");
+  };
+
   const handleClick = (handler: string) => {
     switch (handler) {
+      case "handleDashboard":
+        handleDashboard();
+        break;
       case "handleProfile":
         handleProfile();
         break;
@@ -57,9 +66,16 @@ const Sidebar = () => {
       <nav className={sidebarStyles.nav}>
         <ul>
           {navItems.map((item) => (
-            <li key={item.id} onClick={() => handleClick(item.handler)}>
-              <span className="material-icons">{item.icon}</span>
-              {item.title}
+            <li key={item.id}>
+              <Link href={item.path}>
+                <div
+                  className={sidebarStyles.content}
+                  onClick={() => handleClick(item.handler)}
+                >
+                  <span className="material-icons">{item.icon}</span>
+                  {item.title}
+                </div>
+              </Link>
             </li>
           ))}
         </ul>

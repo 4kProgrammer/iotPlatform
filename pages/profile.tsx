@@ -1,97 +1,104 @@
 import React, { useState } from "react";
 import profileStyles from "../styles/Profile.module.css";
-import Layout from '../components/Layout';
+import Layout from "../components/Layout";
+import EditModal from "../components/EditModal";
 
 const Profile: React.FC = () => {
   const [name, setName] = useState("John Doe");
   const [email, setEmail] = useState("john.doe@example.com");
   const [mobile, setMobile] = useState("123-456-7890");
   const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [isSaveEnabled, setIsSaveEnabled] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingField, setEditingField] = useState("");
 
   const handleSave = () => {
     // Save the changes
     console.log("Save clicked");
   };
 
-  const handleEditPassword = () => {
-    setIsEditingPassword(true);
+  const handleEdit = (field: string) => {
+    setEditingField(field);
+    setIsEditing(true);
   };
 
-  const handlePasswordChange = () => {
-    if (newPassword === confirmNewPassword) {
-      setPassword(newPassword);
-      setIsEditingPassword(false);
-      setIsSaveEnabled(true);
-    } else {
-      console.log("Passwords do not match");
+  const handleClose = () => {
+    setIsEditing(false);
+  };
+
+  const handleSaveChanges = (newFieldValue: string) => {
+    if (editingField === "name") {
+      setName(newFieldValue);
+    } else if (editingField === "email") {
+      setEmail(newFieldValue);
+    } else if (editingField === "mobile") {
+      setMobile(newFieldValue);
+    } else if (editingField === "password") {
+      setPassword(newFieldValue);
     }
+    setIsEditing(false);
   };
 
   return (
     <Layout>
-    <div className={profileStyles.container}>
-      <h1 className={profileStyles.title}>Profile</h1>
-      <div className={profileStyles.field}>
-        <label>Name:</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            setIsSaveEnabled(true);
-          }}
+      <div className={profileStyles.container}>
+        <h1 className={profileStyles.title}>Profile</h1>
+        <div className={profileStyles.field}>
+          <label>Name:</label>
+          <div className={profileStyles.inputWrapper}>
+            <input type="text" value={name} readOnly />
+            <span
+              className={`material-icons ${profileStyles.editIcon}`}
+              onClick={() => handleEdit("name")}
+            >
+              edit
+            </span>
+          </div>
+        </div>
+        <div className={profileStyles.field}>
+          <label>Email:</label>
+          <div className={profileStyles.inputWrapper}>
+            <input type="email" value={email} readOnly />
+            <span
+              className={`material-icons ${profileStyles.editIcon}`}
+              onClick={() => handleEdit("email")}
+            >
+              edit
+            </span>
+          </div>
+        </div>
+        <div className={profileStyles.field}>
+          <label>Mobile:</label>
+          <div className={profileStyles.inputWrapper}>
+            <input type="tel" value={mobile} readOnly />
+            <span
+              className={`material-icons ${profileStyles.editIcon}`}
+              onClick={() => handleEdit("mobile")}
+            >
+              edit
+            </span>
+          </div>
+        </div>
+        <div className={profileStyles.field}>
+          <label>Password:</label>
+          <div className={profileStyles.inputWrapper}>
+            <input type="password" value={password} readOnly />
+            <span
+              className={`material-icons ${profileStyles.editIcon}`}
+              onClick={() => handleEdit("password")}
+            >
+              edit
+            </span>
+          </div>
+        </div>       
+      </div>
+      {isEditing && (
+        <EditModal
+          field={editingField}
+          onClose={handleClose}
+          onSaveChanges={handleSaveChanges}
         />
-      </div>
-      <div className={profileStyles.field}>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setIsSaveEnabled(true);
-          }}
-        />
-      </div>
-      <div className={profileStyles.field}>
-        <label>Mobile:</label>
-        <input type="tel" value={mobile} readOnly />
-      </div>
-      <div className={profileStyles.field}>
-        <label>Password:</label>
-        <input type="password" value={password} readOnly />
-        {!isEditingPassword ? (
-          <button onClick={handleEditPassword}>Edit</button>
-        ) : (
-          <>
-            <input
-              type="password"
-              placeholder="New password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-            />
-            <button onClick={handlePasswordChange}>Set</button>
-          </>
-        )}
-      </div>
-      {isSaveEnabled && (
-        <button className={profileStyles.saveButton} onClick={handleSave}>
-          Save
-        </button>
       )}
-    </div>
     </Layout>
-    
   );
 };
 

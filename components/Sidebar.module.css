@@ -43,6 +43,12 @@
   transition: background-color 0.2s ease, color 0.2s ease;
   gap: 0.5rem;
 }
+.nav li span.content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
 
 .nav li:hover {
   background-color: #ced4da;
