@@ -1,11 +1,10 @@
-import { useEffect, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Chart, registerables } from 'chart.js';
+import { Chart, ChartOptions, registerables } from 'chart.js';
 import chartStyles from '../../styles/Chart.module.css';
 
 Chart.register(...registerables);
 
-const ChartComponent = () => {
+const ChartComponent: React.FC = () => {
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
@@ -21,14 +20,17 @@ const ChartComponent = () => {
     ],
   };
 
-  const options = {
+  const options: ChartOptions<'line'> = {
     scales: {
       x: {
         type: 'category',
+        display: true,
         labels: data.labels,
       },
       y: {
         type: 'linear',
+        display: true,
+        position: 'left',
         beginAtZero: true,
       },
     },
@@ -36,7 +38,7 @@ const ChartComponent = () => {
 
   return (
     <div className={chartStyles.chartContainer}>
-      <Line  className={chartStyles.chartContainer} data={data} options={options} />
+      <Line className={chartStyles.chartContainer} data={data} options={options} />
     </div>
   );
 };
