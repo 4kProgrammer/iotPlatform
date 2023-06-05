@@ -17,6 +17,12 @@ type Holiday = {
   day: number;
   month: number;
 };
+type TDate = {
+  day: number;
+  month: number;
+  year: number;
+};
+const persianMonth = ["fa","or","kho","tir","mor","sha","mehr","aban","azar","day","bahamn","esfans"];
 
 const Calendar: React.FC<CalendarProps> = ({
   startOfWeek: startOfWeekValue,
@@ -66,37 +72,72 @@ const Calendar: React.FC<CalendarProps> = ({
     return days;
   };
 
+  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {    
+    const selectedJalaliMonthValue = parseInt(event.target.value, 10);
+    const [gy, gm, gd] = JalaliDate.jalaliToGregorian(parseInt(formatJalali(currentMonth, 'yyyy'), 10), selectedJalaliMonthValue, parseInt(formatJalali(currentMonth, 'dd'), 10));
+    setCurrentMonth(new Date(gy, gm - 1, gd));
+  };
+
+  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedJalaliYearValue = parseInt(event.target.value, 10);
+    const [gy, gm, gd] = JalaliDate.jalaliToGregorian(selectedJalaliYearValue, parseInt(formatJalali(currentMonth, 'MM'), 10), parseInt(formatJalali(currentMonth, 'dd'), 10));
+    setCurrentMonth(new Date(gy, gm - 1, gd));
+  };
+
 
   const handlePrevMonth = () => {
-    setCurrentMonth((prevMonth) => addMonths(prevMonth, -1));
+    setCurrentMonth((prevMonth) => addMonths(prevMonth, -1));   
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prevMonth) => addMonths(prevMonth, 1));
+    setCurrentMonth((prevMonth) => addMonths(prevMonth, 1));   
   };
 
   const renderCalendarHeader = () => {
-    const headerFormat = 'MMMM yyyy';
-    const formattedHeader = formatJalali(currentMonth, headerFormat); // Format the month in Persian (Jalali) calendar
+
+    const months = Array.from(Array(12).keys()).map((month) => {
+      const [gy, gm, gd] = JalaliDate.jalaliToGregorian(1300, month + 1, 1);
+      const gregorianSelectedDate = new Date(gy, gm - 1, gd);
+      return {
+        index: month+1,
+        value: formatJalali(gregorianSelectedDate, 'MMMM')
+      };
+    });
+
+    const years = Array.from(Array(100).keys()).map((year) => {      
+      return {
+        index: 1400 + year
+      };
+    });
 
     return (
       <div className="flex justify-between items-center mb-4">
-        <button
-          className="text-gray-500 hover:text-gray-700"
-          onClick={handlePrevMonth}
-        >
+        <button className="text-gray-500 hover:text-gray-700" onClick={handlePrevMonth}>
           Prev
         </button>
-        <h2 className="text-lg font-bold">{formattedHeader}</h2>
-        <button
-          className="text-gray-500 hover:text-gray-700"
-          onClick={handleNextMonth}
-        >
+        <div className="flex items-center">
+          <select value={parseInt(formatJalali(currentMonth, 'MM'), 10)} onChange={handleMonthChange}>
+            {months.map((month, index) => (
+              <option key={index} value={month.index}>
+                {month.value}
+              </option>
+            ))}
+          </select>
+          <select value={parseInt(formatJalali(currentMonth, 'yyyy'), 10)} onChange={handleYearChange}>
+            {years.map((year, index) => (
+              <option key={index} value={year.index}>
+                {year.index}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button className="text-gray-500 hover:text-gray-700" onClick={handleNextMonth}>
           Next
         </button>
       </div>
     );
   };
+
 
   const renderCalendarDays = () => {
     const daysOfWeek = ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش']; // Persian days of the week
@@ -119,46 +160,46 @@ const Calendar: React.FC<CalendarProps> = ({
     const daysInMonth = getDaysInMonth(currentMonth);
 
     const handleDayClick = (day: Date) => {
-    setSelectedDays((prevSelectedDays) => {
-      const isDaySelected = prevSelectedDays.some((selectedDay) =>
-        isSameDay(selectedDay, day)
-      );
+      setSelectedDays((prevSelectedDays) => {
+        const isDaySelected = prevSelectedDays.some((selectedDay) =>
+          isSameDay(selectedDay, day)
+        );
 
-      const updatedSelectedDays = isDaySelected
-        ? prevSelectedDays.filter((selectedDay) => !isSameDay(selectedDay, day))
-        : [...prevSelectedDays, day];
+        const updatedSelectedDays = isDaySelected
+          ? prevSelectedDays.filter((selectedDay) => !isSameDay(selectedDay, day))
+          : [...prevSelectedDays, day];
 
-      console.log(updatedSelectedDays); // Log selected days to the console
+        console.log(updatedSelectedDays); // Log selected days to the console
 
-      return updatedSelectedDays;
-    });
-  };
+        return updatedSelectedDays;
+      });
+    };
 
 
     return (
       <div className="grid grid-cols-7 gap-2">
         {daysInMonth.map((day) => {
-          
+
           const isOfficialHoliday = (day: Date, holidays: Holiday[]): boolean => {
             return holidays.some((holiday) => {
               return holiday.month === day.getMonth() + 1 && holiday.day === day.getDate();
             });
           };
 
-          const isUnofficialHoliday =(day: Date, holidays: Date[]): boolean => {
-            return holidays.some((holiday) => {              
+          const isUnofficialHoliday = (day: Date, holidays: Date[]): boolean => {
+            return holidays.some((holiday) => {
               return holiday.getMonth() === day.getMonth() && holiday.getDate() === day.getDate() && holiday.getFullYear() === day.getFullYear();
-            });            
-        };        
+            });
+          };
 
           const jalaliMonth = parseInt(formatJalali(day, 'MM'), 10);
           const jalaliYear = parseInt(formatJalali(day, 'yyyy'), 10);
           var isCurrentMonth = false;
 
-          const jalaliCurrentYear = parseInt(formatJalali(currentMonth, 'yyyy'),10);
+          const jalaliCurrentYear = parseInt(formatJalali(currentMonth, 'yyyy'), 10);
           const jalaliCurrentMonth = parseInt(formatJalali(currentMonth, 'MM'), 10);
-          
-          if (jalaliCurrentMonth === jalaliMonth && jalaliCurrentYear === jalaliYear ) {
+
+          if (jalaliCurrentMonth === jalaliMonth && jalaliCurrentYear === jalaliYear) {
             isCurrentMonth = true;
           }
 
@@ -169,7 +210,7 @@ const Calendar: React.FC<CalendarProps> = ({
           };
 
           const cellClasses = classNames('p-2', {
-            'text-red-500': isOfficialHoliday(day,officialHolidays) || isUnofficialHoliday(day,unofficialHolidays) || isWeekendVacation(day), 
+            'text-red-500': isOfficialHoliday(day, officialHolidays) || isUnofficialHoliday(day, unofficialHolidays) || isWeekendVacation(day),
             'opacity-50': !isCurrentMonth, // Added opacity class when day is not in the current month
             'border-2 border-blue-500': selectedDays.some((selectedDay) => isSameDay(selectedDay, day)),
           });
@@ -213,15 +254,15 @@ const Home: React.FC = () => {
     { day: 6, month: 6 }, // Example: June 6th
     // Add more holidays with day and month values
   ];
-   
+
   const unofficialHolidays = [new Date('2023-06-07')];
 
   // Define weekend vacations
   const weekendVacations = [
     {
       name: 'Weekend Vacation 1',
-      daysOfWeek: [4,5], // Friday and Saturday
-    }    
+      daysOfWeek: [4, 5], // Friday and Saturday
+    }
   ];
 
   return (
