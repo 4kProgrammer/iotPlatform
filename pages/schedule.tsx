@@ -25,6 +25,7 @@ const Calendar: React.FC<CalendarProps> = ({
   weekendVacations,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDays, setSelectedDays] = useState<Date[]>([]);
 
   const getDaysInMonth = (date: Date) => {
     const days = [];
@@ -117,6 +118,23 @@ const Calendar: React.FC<CalendarProps> = ({
   const renderCalendarCells = () => {
     const daysInMonth = getDaysInMonth(currentMonth);
 
+    const handleDayClick = (day: Date) => {
+    setSelectedDays((prevSelectedDays) => {
+      const isDaySelected = prevSelectedDays.some((selectedDay) =>
+        isSameDay(selectedDay, day)
+      );
+
+      const updatedSelectedDays = isDaySelected
+        ? prevSelectedDays.filter((selectedDay) => !isSameDay(selectedDay, day))
+        : [...prevSelectedDays, day];
+
+      console.log(updatedSelectedDays); // Log selected days to the console
+
+      return updatedSelectedDays;
+    });
+  };
+
+
     return (
       <div className="grid grid-cols-7 gap-2">
         {daysInMonth.map((day) => {
@@ -133,13 +151,14 @@ const Calendar: React.FC<CalendarProps> = ({
             });            
         };        
 
-          const jalaliCurrentMonth = parseInt(formatJalali(day, 'MM'), 10);
+          const jalaliMonth = parseInt(formatJalali(day, 'MM'), 10);
+          const jalaliYear = parseInt(formatJalali(day, 'yyyy'), 10);
           var isCurrentMonth = false;
 
-          const jalaliYear = formatJalali(currentMonth.getFullYear(), 'yyyy');
-          const jalaliMonth = parseInt(formatJalali(currentMonth, 'MM'), 10);
+          const jalaliCurrentYear = parseInt(formatJalali(currentMonth, 'yyyy'),10);
+          const jalaliCurrentMonth = parseInt(formatJalali(currentMonth, 'MM'), 10);
           
-          if (jalaliCurrentMonth === jalaliMonth) {
+          if (jalaliCurrentMonth === jalaliMonth && jalaliCurrentYear === jalaliYear ) {
             isCurrentMonth = true;
           }
 
@@ -150,14 +169,13 @@ const Calendar: React.FC<CalendarProps> = ({
           };
 
           const cellClasses = classNames('p-2', {
-            'bg-red-500 text-white': isOfficialHoliday(day,officialHolidays),
-            'bg-yellow-500 text-white': isUnofficialHoliday(day,unofficialHolidays),
-            'bg-blue-500 text-white': isWeekendVacation(day),
-            'text-gray-400': !isCurrentMonth,
+            'text-red-500': isOfficialHoliday(day,officialHolidays) || isUnofficialHoliday(day,unofficialHolidays) || isWeekendVacation(day), 
+            'opacity-50': !isCurrentMonth, // Added opacity class when day is not in the current month
+            'border-2 border-blue-500': selectedDays.some((selectedDay) => isSameDay(selectedDay, day)),
           });
 
           return (
-            <div key={day.toISOString()} className={cellClasses}>
+            <div key={day.toISOString()} className={cellClasses} onClick={() => handleDayClick(day)}>
               {jalaliDate.day}
             </div>
           );
