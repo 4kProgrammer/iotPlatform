@@ -8,14 +8,21 @@ import JalaliDate from "../components/utils/jalaliDateUtils";
 
 type CalendarProps = {
   startOfWeek: 0 | 2 | 1 | 5 | 3 | 4 | 6; // 0 for Sunday, 1 for Monday, etc.
-  officialHolidays: Date[];
+  officialHolidays: Holiday[];
   unofficialHolidays: Date[];
+  weekendVacations: { name: string; daysOfWeek: number[] }[]; // Array of weekend vacations
+};
+
+type Holiday = {
+  day: number;
+  month: number;
 };
 
 const Calendar: React.FC<CalendarProps> = ({
   startOfWeek: startOfWeekValue,
   officialHolidays,
   unofficialHolidays,
+  weekendVacations,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -113,16 +120,20 @@ const Calendar: React.FC<CalendarProps> = ({
     return (
       <div className="grid grid-cols-7 gap-2">
         {daysInMonth.map((day) => {
-          const isOfficialHoliday = officialHolidays.some((holiday) =>
-            isSameDay(holiday, day)
-          );
+          
+          const isOfficialHoliday = (day: Date, holidays: Holiday[]): boolean => {
+            return holidays.some((holiday) => {
+              return holiday.month === day.getMonth() + 1 && holiday.day === day.getDate();
+            });
+          };
 
-          const isUnofficialHoliday = unofficialHolidays.some((holiday) =>
-            isSameDay(holiday, day)
-          );
+          const isUnofficialHoliday =(day: Date, holidays: Date[]): boolean => {
+            return holidays.some((holiday) => {              
+              return holiday.getMonth() === day.getMonth() && holiday.getDate() === day.getDate() && holiday.getFullYear() === day.getFullYear();
+            });            
+        };        
 
           const jalaliCurrentMonth = parseInt(formatJalali(day, 'MM'), 10);
-          //const isCurrentMonth = isSameMonth(day, currentMonth);
           var isCurrentMonth = false;
 
           const jalaliYear = formatJalali(currentMonth.getFullYear(), 'yyyy');
@@ -139,9 +150,10 @@ const Calendar: React.FC<CalendarProps> = ({
           };
 
           const cellClasses = classNames('p-2', {
-            'bg-red-500 text-white': isOfficialHoliday,
-            'bg-yellow-500 text-white': isUnofficialHoliday,
-            'text-gray-400': !isCurrentMonth, // Apply gray color to days not in the current month
+            'bg-red-500 text-white': isOfficialHoliday(day,officialHolidays),
+            'bg-yellow-500 text-white': isUnofficialHoliday(day,unofficialHolidays),
+            'bg-blue-500 text-white': isWeekendVacation(day),
+            'text-gray-400': !isCurrentMonth,
           });
 
           return (
@@ -151,6 +163,14 @@ const Calendar: React.FC<CalendarProps> = ({
           );
         })}
       </div>
+    );
+  };
+
+
+  const isWeekendVacation = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    return weekendVacations.some((vacation) =>
+      vacation.daysOfWeek.includes(dayOfWeek)
     );
   };
 
@@ -170,9 +190,21 @@ const Home: React.FC = () => {
   // Define the start of the week (0 for Sunday, 1 for Monday, etc.)
   const startOfWeek: 0 | 2 | 1 | 5 | 3 | 4 | 6 = 6;
 
-  // Define official and unofficial holidays
-  const officialHolidays = [new Date('2023-06-07')];
-  const unofficialHolidays = [new Date('2023-06-14')];
+  const officialHolidays: Holiday[] = [
+    { day: 5, month: 6 }, // Example: June 5th
+    { day: 6, month: 6 }, // Example: June 6th
+    // Add more holidays with day and month values
+  ];
+   
+  const unofficialHolidays = [new Date('2023-06-07')];
+
+  // Define weekend vacations
+  const weekendVacations = [
+    {
+      name: 'Weekend Vacation 1',
+      daysOfWeek: [4,5], // Friday and Saturday
+    }    
+  ];
 
   return (
     <div className="max-w-md mx-auto py-8">
@@ -180,6 +212,7 @@ const Home: React.FC = () => {
         startOfWeek={startOfWeek}
         officialHolidays={officialHolidays}
         unofficialHolidays={unofficialHolidays}
+        weekendVacations={weekendVacations}
       />
     </div>
   );
