@@ -9,17 +9,22 @@ type TimeSlot = {
 
 const halfHours = ['00', '30'];
 
-// Replace these functions with your actual data fetching/updating methods
 const fetchTimeSlots = async (): Promise<TimeSlot[]> => {
   // Replace with your actual data fetching method
   // This is a placeholder that returns the initial values
-  return Array.from({ length: 24 }, (_, hour) =>
-    halfHours.map((_, i) => ({
-      hour,
-      half: i,
-      selected: false,
-    }))
-  ).flat();
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(
+        Array.from({ length: 24 }, (_, hour) =>
+          halfHours.map((_, i) => ({
+            hour,
+            half: i,
+            selected: true,
+          }))
+        ).flat()
+      );
+    }, 0); // Wait for 3 seconds before resolving
+  });
 };
 
 const updateTimeSlots = async (timeSlots: TimeSlot[]): Promise<void> => {
@@ -33,6 +38,16 @@ const TimeLimitSection: React.FC = () => {
   const [endRangeIndex, setEndRangeIndex] = useState<number | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectingValue, setSelectingValue] = useState<boolean | null>(null);
+  const [selectedOption, setSelectedOption] = useState('do not repeat');
+
+  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOption(e.target.value);
+    console.log(`Option Selected: ${e.target.value}`);
+  };
+
+  const saveSelection = () => {
+    console.log(`Saved Selection: Time Range: ${ranges}, Option: ${selectedOption}`);
+  };
 
   // Fetch the time slots when the component mounts
   useEffect(() => {
@@ -53,7 +68,7 @@ const TimeLimitSection: React.FC = () => {
     const newTimeSlots = [...timeSlots];
     newTimeSlots[index].selected = newSelectingValue;
     setTimeSlots(newTimeSlots);
-};
+  };
   const endSelecting = () => {
     setIsSelecting(false);
     setStartRangeIndex(null);
@@ -113,55 +128,82 @@ const TimeLimitSection: React.FC = () => {
     });
 
     return ranges;
-}, [timeSlots]);
+  }, [timeSlots]);
+
 
 
   return (
-    <div className="mt-4 select-none">
-        <h2 className="text-lg font-semibold mb-2">TimeTable</h2>
-        <div className="relative bg-gray-100 p-4 m-0 p-0">
-              {timeSlots.map((slot, index) => {
-                  const range = ranges.find(({ start, end }) => index >= start && index <= end);
-                  let displayText = "";
-                  if (range && range.start === index) {
-                      let endSlot;
-                      if (range.end < timeSlots.length - 1) {
-                          endSlot = timeSlots[range.end + 1];
-                      } else if (range.end === timeSlots.length - 1 && timeSlots[range.end].selected) {
-                          endSlot = { hour: 24, half: 0 };
-                      } else {
-                          endSlot = timeSlots[range.end];
-                      }
-                      displayText = `${timeSlots[range.start].hour}:${halfHours[timeSlots[range.start].half]}-${endSlot.hour}:${halfHours[endSlot.half]}`;
-                  }
+    <div className="mt-4 select-none" style={{ minHeight: '700px' }}>
+      <h2 className="text-lg font-semibold mb-2">انتخاب بازه زمانی</h2>
+      <div className="relative bg-gray-100 p-4 m-0 p-0 overflow-auto"style={{ maxHeight: '400px' }} >
+        {timeSlots.map((slot, index) => {
+          const range = ranges.find(({ start, end }) => index >= start && index <= end);
+          let displayText = "";
+          if (range && range.start === index) {
+            let endSlot;
+            if (range.end < timeSlots.length - 1) {
+              endSlot = timeSlots[range.end + 1];
+            } else if (range.end === timeSlots.length - 1 && timeSlots[range.end].selected) {
+              endSlot = { hour: 24, half: 0 };
+            } else {
+              endSlot = timeSlots[range.end];
+            }
+            displayText = `${timeSlots[range.start].hour}:${halfHours[timeSlots[range.start].half]}-${endSlot.hour}:${halfHours[endSlot.half]}`;
+          }
 
-              // differentiate border style
-              const isHourCell = slot.half === 0;
-              const borderClass = isHourCell ? 'border-t-2 border-blue-500' : 'border-t border-gray-300';
+          // differentiate border style
+          const isHourCell = slot.half === 0;
+          const borderClass = isHourCell ? 'border-t-2 border-blue-500' : 'border-t border-gray-300';
 
-              // differentiate text color
-              const textColorClass = isHourCell ? 'text-sm font-mono' : 'text-sm font-mono text-transparent';
+          // differentiate text color
+          const textColorClass = isHourCell ? 'text-sm font-mono' : 'text-sm font-mono text-transparent';
 
-              return (
-                <div className={`flex ${borderClass} m-0 p-0`} key={index}>
-                    <div className="border-r border-gray-300 p-2 text-center flex items-start m-0 p-0">
-                        <div className="inline-block min-w-[4rem] m-0 p-0">
-                            <span className={textColorClass}>{slot.hour}:{halfHours[slot.half]}</span>
-                        </div>
-                    </div>
-                    <div
-                        onMouseDown={() => startSelecting(index)}
-                        onMouseEnter={() => selectTimeSlot(index)}
-                        className={classNames('border-r border-gray-300 flex-grow h-10 cursor-pointer relative rounded transition-colors duration-300 m-0 p-0', {
-                            'bg-blue-400': slot.selected,
-                            'hover:border-blue-400': !slot.selected
-                        })}
-                    >{displayText && <span className="absolute top-1 left-0 transform translate-y-1/4 translate-x-1/2 text-black">{displayText}</span>}
-                    </div>
+          return (
+            <div className={`flex ${borderClass} m-0 p-0`} key={index}>
+              <div className="border-r border-gray-300 p-2 text-center flex items-start m-0 p-0">
+                <div className="inline-block min-w-[4rem] m-0 p-0">
+                  <span className={textColorClass}>{slot.hour}:{halfHours[slot.half]}</span>
                 </div>
-              );
-            })}
-        </div>
+              </div>
+              <div
+                onMouseDown={() => startSelecting(index)}
+                onMouseEnter={() => selectTimeSlot(index)}
+                className={classNames('border-r border-gray-300 flex-grow h-10 cursor-pointer relative rounded transition-colors duration-300 m-0 p-0', {
+                  'bg-blue-400': slot.selected,
+                  'hover:border-blue-400': !slot.selected
+                })}
+              >{displayText && <span className="absolute top-1 left-0 transform translate-y-1/4 translate-x-1/2 text-black">{displayText}</span>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-4">
+        <label htmlFor="repeatOption" className="block mb-2">گزینه های تکرار زمان بندی برای روزهای دیگر</label>
+        <select 
+          id="repeatOption"
+          className="block w-full p-2 border border-gray-300 rounded"
+          value={selectedOption} 
+          onChange={handleOptionChange}
+        >
+          <option value="do not repeat">تکرار نشود</option>
+          <option value="every day of this year">هر روز سال</option>
+          <option value="every day of this month">هر روز ماه</option>
+          <option value="every day of this week">هر روز هفته</option>
+          <option value="every week saturday">هر هفته سه شنبه ها</option>
+          <option value="every working day">هر روز کاری</option>
+          <option value="every weekend day">هر روز آخر هفته ها</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div className="mt-4">
+        <button 
+          className="w-full p-2 text-white bg-blue-500 rounded" 
+          onClick={saveSelection}
+        >
+          ذخیره زمان بندی
+        </button>
+      </div>
     </div>
   );
 

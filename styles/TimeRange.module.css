@@ -1,7 +1,14 @@
-.grid-container {
-    grid-template-columns: min-content auto;
-  }
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+}
 
-  .selected-cell {
-    background-color: rgb(72, 196, 113);
+@media screen and (min-width: 600px) {
+  .flexContainer {
+    flex-direction: row;
+  }
+}
+
+.timeRangeSection {
+  min-width: 500px; /* replace with the minimum acceptable width for TimeRangeSection */
 }
