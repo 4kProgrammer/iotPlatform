@@ -48,11 +48,12 @@ const TimeLimitSection: React.FC = () => {
   const startSelecting = (index: number) => {
     setIsSelecting(true);
     setStartRangeIndex(index);
-    setSelectingValue(timeSlots[index].selected ? false : true);
+    const newSelectingValue = timeSlots[index].selected ? false : true;
+    setSelectingValue(newSelectingValue);
     const newTimeSlots = [...timeSlots];
-    newTimeSlots[index].selected = selectingValue !== null ? selectingValue : !newTimeSlots[index].selected;
+    newTimeSlots[index].selected = newSelectingValue;
     setTimeSlots(newTimeSlots);
-  };
+};
   const endSelecting = () => {
     setIsSelecting(false);
     setStartRangeIndex(null);
@@ -102,7 +103,9 @@ const TimeLimitSection: React.FC = () => {
           start = index;
         }
         end = index;
-      } else if (start !== null) {
+      }
+
+      if ((start !== null && !slot.selected) || (slot.selected && index === timeSlots.length - 1)) {
         ranges.push({ start, end: end! });
         start = null;
         end = null;
@@ -110,25 +113,40 @@ const TimeLimitSection: React.FC = () => {
     });
 
     return ranges;
-  }, [timeSlots]);
+}, [timeSlots]);
+
 
   return (
     <div className="mt-4 select-none">
         <h2 className="text-lg font-semibold mb-2">TimeTable</h2>
         <div className="relative bg-gray-100 p-4 m-0 p-0">
-            {timeSlots.map((slot, index) => {
-              const range = ranges.find(({ start, end }) => index >= start && index <= end);
-              let displayText = "";
-              if (range && range.start === index) {
-                const endSlot = range.end < timeSlots.length - 1 ? timeSlots[range.end + 1] : { hour: 24, half: 0 };
-                displayText = `${timeSlots[range.start].hour}:${halfHours[timeSlots[range.start].half]}-${endSlot.hour}:${halfHours[endSlot.half]}`;
-              }
+              {timeSlots.map((slot, index) => {
+                  const range = ranges.find(({ start, end }) => index >= start && index <= end);
+                  let displayText = "";
+                  if (range && range.start === index) {
+                      let endSlot;
+                      if (range.end < timeSlots.length - 1) {
+                          endSlot = timeSlots[range.end + 1];
+                      } else if (range.end === timeSlots.length - 1 && timeSlots[range.end].selected) {
+                          endSlot = { hour: 24, half: 0 };
+                      } else {
+                          endSlot = timeSlots[range.end];
+                      }
+                      displayText = `${timeSlots[range.start].hour}:${halfHours[timeSlots[range.start].half]}-${endSlot.hour}:${halfHours[endSlot.half]}`;
+                  }
+
+              // differentiate border style
+              const isHourCell = slot.half === 0;
+              const borderClass = isHourCell ? 'border-t-2 border-blue-500' : 'border-t border-gray-300';
+
+              // differentiate text color
+              const textColorClass = isHourCell ? 'text-sm font-mono' : 'text-sm font-mono text-transparent';
 
               return (
-                <div className="flex border-t border-gray-300 m-0 p-0" key={index}>
+                <div className={`flex ${borderClass} m-0 p-0`} key={index}>
                     <div className="border-r border-gray-300 p-2 text-center flex items-start m-0 p-0">
                         <div className="inline-block min-w-[4rem] m-0 p-0">
-                            <span className="text-sm font-mono">{slot.hour}:{halfHours[slot.half]}</span>
+                            <span className={textColorClass}>{slot.hour}:{halfHours[slot.half]}</span>
                         </div>
                     </div>
                     <div
@@ -146,6 +164,7 @@ const TimeLimitSection: React.FC = () => {
         </div>
     </div>
   );
+
 };
 
 export default TimeLimitSection;
