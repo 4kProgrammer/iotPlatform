@@ -16,3 +16,6 @@
     flex-direction: row;
   }
 }
+.flexItem {
+  flex: 1;
+}

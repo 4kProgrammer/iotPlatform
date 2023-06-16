@@ -1,0 +1,16 @@
+/* fonts.css */
+
+@font-face {
+    font-family: 'iranSans';
+    src: url('../assets/fonts/IranSans/IRANSansWeb_Medium.ttf');
+    /* Add additional formats here for cross-browser support */
+}
+@font-face {
+    font-family: 'iranSansFarsiNum';
+    src: url('../assets/fonts/IranSans/FarsINum/IRANSansWeb(FaNum)_Medium.ttf');
+    /* Add additional formats here for cross-browser support */
+}
+
+body {
+    font-family: 'iranSansFarsiNum', iranSans;
+}

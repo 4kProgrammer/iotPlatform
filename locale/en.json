@@ -1,0 +1,15 @@
+{
+    "nextMonth": "Next Month",
+    "prevMonth": "Previous Month",
+    "farsiLangLable": "Persian",
+    "englishLangLable": "English",
+    "dashBoardPageButton": "Dashboard",
+    "profilePageButton": "Profile",
+    "addDevicePageButton": "Add Device",
+    "schedulePageButton": "Schedule",
+    "logoutPageButton": "Log Out",
+    "sanitaryTemperature": "Sanitary Temperature",
+    "returnTemperature": "Return Temperature",
+    "wentTemperature": "Went Temperature",
+    "energyGrade": "Energy Grade"
+  }

@@ -3,6 +3,10 @@ import { format, addDays, startOfWeek as getStartOfWeek, isSameDay, isSameMonth,
 import classNames from 'classnames';
 import { format as formatJalali, newDate as newDateJalali } from 'date-fns-jalali';
 import JalaliDate from "./jalaliDateUtils";
+import { useLanguage } from '../../context/LanguageContext';
+import translate  from '../utils/i18n';
+
+
 
 
 
@@ -22,7 +26,6 @@ type TDate = {
   month: number;
   year: number;
 };
-const persianMonth = ["fa","or","kho","tir","mor","sha","mehr","aban","azar","day","bahamn","esfans"];
 
 const Calendar: React.FC<CalendarProps> = ({
   startOfWeek: startOfWeekValue,
@@ -31,12 +34,12 @@ const Calendar: React.FC<CalendarProps> = ({
   weekendVacations,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDays, setSelectedDays] = useState<Date[]>([]);
+  const [selectedDays, setSelectedDays] = useState<Date[]>([]); 
+  const { currentLocale  } = useLanguage();
 
   const getDaysInMonth = (date: Date) => {
     const days = [];
-
-    console.log("date" + date);
+    
     const jalaliYear = formatJalali(date, 'yyyy');
     const jalaliMonth = formatJalali(date, 'MM');
     const jalaliDay = '01'; // Always set the day to 01 to get the first day of the month
@@ -45,23 +48,15 @@ const Calendar: React.FC<CalendarProps> = ({
     const year = parseInt(jalaliYear, 10);
     const month = parseInt(jalaliMonth, 10);
     const day = parseInt(jalaliDay, 10);
-    console.log("jalaliStartDate" + year + "|" + month + "|" + day);
     const [gy, gm, gd] = JalaliDate.jalaliToGregorian(year, month, day);
     const gregorianStartDate = new Date(gy, gm - 1, gd);
-    console.log("aaaa|" + gregorianStartDate);
     const startOfMonth = getStartOfWeek(gregorianStartDate, { weekStartsOn: startOfWeekValue });
-    console.log("AA|" + startOfMonth);
+    
 
     // Calculate the number of days to include from the previous month
-    const prevMonthDaysCount = (startOfMonth.getDay() + startOfWeekValue) % 7;
-    //(i + startOfWeekValue) % 7;
-    console.log("startOfMonth.getDay()" + startOfMonth.getDay());
-    console.log("prevMonthDaysCount" + prevMonthDaysCount);
-
+    const prevMonthDaysCount = (startOfMonth.getDay() + startOfWeekValue) % 7;    
     // Get the date for the first day of the displayed week
     const startOfWeek = addDays(startOfMonth, 0);
-
-    console.log("startOfWeek" + startOfWeek);
 
     // Generate the days for the calendar, including the previous month's days if needed
     for (let i = 0; i < 42; i++) {
@@ -113,7 +108,7 @@ const Calendar: React.FC<CalendarProps> = ({
     return (
       <div className="flex justify-between items-center mb-4">
         <button className="text-gray-500 hover:text-gray-700" onClick={handlePrevMonth}>
-          ماه قبل
+        {translate('prevMonth', currentLocale)}
         </button>
         <div className="flex items-center">
           <select value={parseInt(formatJalali(currentMonth, 'MM'), 10)} onChange={handleMonthChange}>
@@ -132,7 +127,7 @@ const Calendar: React.FC<CalendarProps> = ({
           </select>
         </div>
         <button className="text-gray-500 hover:text-gray-700" onClick={handleNextMonth}>
-          ماه بعد
+        {translate('nextMonth', currentLocale)}
         </button>
       </div>
     );

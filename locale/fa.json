@@ -1,0 +1,15 @@
+{
+  "nextMonth": "ماه بعد",
+  "prevMonth": "ماه قبل",
+  "farsiLangLable": "فارسی",
+  "englishLangLable": "انگلیسی",
+  "dashBoardPageButton": "داشبورد",
+  "profilePageButton": "پروفایل",
+  "addDevicePageButton": "اضافه نمودن وسیله",
+  "schedulePageButton": "برنامه ریزی",
+  "logoutPageButton": "خروج",
+  "sanitaryTemperature": "دمای بهداشتی",
+  "returnTemperature": "دمای برگشت",
+  "wentTemperature": "دمای رفت",
+  "energyGrade": "رده انرژی"
+}

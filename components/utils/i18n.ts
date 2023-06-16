@@ -7,7 +7,7 @@ const translations: { [key: string]: { [key: string]: string } } = {
     fa,
 };
 
-const translate = (key: string, language: string) => {
+const translate = (key: string, language: string) => {    
     return translations[language][key];
 };
 

@@ -3,8 +3,12 @@ import ChartSection from '../components/Dashboard/Chart';
 import Widget from '../components/Dashboard/Widget';
 import homeStyles from '../styles/Home.module.css';
 import Layout from '../components/Layout';
+import { useLanguage } from '../context/LanguageContext';
+import translate from '../components/utils/i18n';
+
 
 const IndexPage = () => { 
+  const { currentLocale } = useLanguage();
 
   return ( 
       <Layout >
@@ -17,10 +21,10 @@ const IndexPage = () => {
             </div>
             <div className={homeStyles.widgetWrapper}>
               <div className={homeStyles.widgets}>
-                <Widget title="Temperature" value="72°F" />
-                <Widget title="Humidity" value="45%" />
-                <Widget title="Pressure" value="1013 hPa" />
-                <Widget title="Wind Speed" value="5 mph" />
+                <Widget title={translate('sanitaryTemperature', currentLocale)} value="72°F" />
+                <Widget title={translate('returnTemperature', currentLocale)} value="45%" />
+                <Widget title={translate('wentTemperature', currentLocale)} value="1013 hPa" />
+                <Widget title={translate('energyGrade', currentLocale)} value="5 mph" />
               </div>
             </div>
           </div>

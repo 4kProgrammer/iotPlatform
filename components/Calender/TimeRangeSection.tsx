@@ -32,7 +32,7 @@ const updateTimeSlots = async (timeSlots: TimeSlot[]): Promise<void> => {
   // This is a placeholder that does nothing
 };
 
-const TimeLimitSection: React.FC = () => {
+const TimeLimitSection: React.FC<{ selectedDay: (number | Date) }> = ({ selectedDay }) => {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [startRangeIndex, setStartRangeIndex] = useState<number | null>(null);
   const [endRangeIndex, setEndRangeIndex] = useState<number | null>(null);
@@ -53,6 +53,11 @@ const TimeLimitSection: React.FC = () => {
   useEffect(() => {
     fetchTimeSlots().then(setTimeSlots);
   }, []);
+
+  // Fetch the time slots when the component mounts and when selectedDay changes
+  useEffect(() => {
+    fetchTimeSlots().then(setTimeSlots);
+  }, [selectedDay]);
 
   // Log and update the time slots when they change
   useEffect(() => {
@@ -190,7 +195,7 @@ const TimeLimitSection: React.FC = () => {
           <option value="every day of this year">هر روز سال</option>
           <option value="every day of this month">هر روز ماه</option>
           <option value="every day of this week">هر روز هفته</option>
-          <option value="every week saturday">هر هفته سه شنبه ها</option>
+          <option value="every week saturday">هر هفته سه شنبه ها{selectedDay}</option>
           <option value="every working day">هر روز کاری</option>
           <option value="every weekend day">هر روز آخر هفته ها</option>
           <option value="custom">Custom</option>

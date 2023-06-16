@@ -3,14 +3,10 @@ import { ScreenContext } from "../context/screen-context";
 import sidebarStyles from "./Sidebar.module.css";
 import 'material-icons/css/material-icons.min.css';
 import Link from 'next/link';
+import { useLanguage } from '../context/LanguageContext';
+import translate from './utils/i18n';
 
-const navItems = [
-  { id: 0, title: "Dashboard", icon: "dashboard", handler: "handleDashboard", path: "/" },
-  { id: 1, title: "Profile", icon: "account_circle", handler: "handleProfile", path: "/profile" },
-  { id: 2, title: "Add Device", icon: "add_box", handler: "handleAddDevice", path: "/add-device" },
-  { id: 3, title: "Schedule", icon: "schedule", handler: "handleSchedule", path: "/schedule" },
-  { id: 4, title: "Logout", icon: "logout", handler: "handleLogout", path: "/logout" }
-];
+
 
 const Sidebar = () => {
   const { isSidebarOpen } = useContext(ScreenContext);
@@ -18,6 +14,18 @@ const Sidebar = () => {
   const sidebarClassName = isSidebarOpen
     ? `${sidebarStyles.sidebar} ${sidebarStyles.show}`
     : sidebarStyles.sidebar;
+
+    const { currentLocale } = useLanguage();
+
+    const navItems = [
+      { id: 0, title: translate('dashBoardPageButton', currentLocale), icon: "dashboard", handler: "handleDashboard", path: "/" },
+      { id: 1, title: translate('profilePageButton', currentLocale), icon: "account_circle", handler: "handleProfile", path: "/profile" },
+      { id: 2, title: translate('addDevicePageButton', currentLocale), icon: "add_box", handler: "handleAddDevice", path: "/add-device" },
+      { id: 3, title: translate('schedulePageButton', currentLocale), icon: "schedule", handler: "handleSchedule", path: "/schedule" },
+      { id: 4, title: translate('logoutPageButton', currentLocale), icon: "logout", handler: "handleLogout", path: "/logout" }
+    ];
+
+   
 
   const handleProfile = () => {
     console.log("Profile clicked");
