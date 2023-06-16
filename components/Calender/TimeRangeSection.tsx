@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext} from "react";
 import classNames from 'classnames';
+import { SelectedDayContext } from '../../context/SelectedDayContext';
 
 type TimeSlot = {
   hour: number;
@@ -9,9 +10,10 @@ type TimeSlot = {
 
 const halfHours = ['00', '30'];
 
-const fetchTimeSlots = async (): Promise<TimeSlot[]> => {
+const fetchTimeSlots = async (selectedDay: Date): Promise<TimeSlot[]> => {
   // Replace with your actual data fetching method
   // This is a placeholder that returns the initial values
+  console.log("timeSlot"+selectedDay);
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(
@@ -27,18 +29,20 @@ const fetchTimeSlots = async (): Promise<TimeSlot[]> => {
   });
 };
 
+
 const updateTimeSlots = async (timeSlots: TimeSlot[]): Promise<void> => {
   // Replace with your actual data updating method
   // This is a placeholder that does nothing
 };
 
-const TimeLimitSection: React.FC<{ selectedDay: (number | Date) }> = ({ selectedDay }) => {
+const TimeLimitSection: React.FC = () => {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [startRangeIndex, setStartRangeIndex] = useState<number | null>(null);
   const [endRangeIndex, setEndRangeIndex] = useState<number | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectingValue, setSelectingValue] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState('do not repeat');
+  const { selectedDay, setSelectedDay } = useContext(SelectedDayContext);
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(e.target.value);
@@ -49,15 +53,11 @@ const TimeLimitSection: React.FC<{ selectedDay: (number | Date) }> = ({ selected
     console.log(`Saved Selection: Time Range: ${ranges}, Option: ${selectedOption}`);
   };
 
-  // Fetch the time slots when the component mounts
-  useEffect(() => {
-    fetchTimeSlots().then(setTimeSlots);
-  }, []);
-
-  // Fetch the time slots when the component mounts and when selectedDay changes
-  useEffect(() => {
-    fetchTimeSlots().then(setTimeSlots);
+   // Fetch the time slots when the component mounts or selectedDay changes
+   useEffect(() => {
+    fetchTimeSlots(selectedDay).then(setTimeSlots);
   }, [selectedDay]);
+
 
   // Log and update the time slots when they change
   useEffect(() => {
@@ -195,7 +195,7 @@ const TimeLimitSection: React.FC<{ selectedDay: (number | Date) }> = ({ selected
           <option value="every day of this year">هر روز سال</option>
           <option value="every day of this month">هر روز ماه</option>
           <option value="every day of this week">هر روز هفته</option>
-          <option value="every week saturday">هر هفته سه شنبه ها{selectedDay}</option>
+          <option value="every week saturday">هر هفته سه شنبه ها</option>
           <option value="every working day">هر روز کاری</option>
           <option value="every weekend day">هر روز آخر هفته ها</option>
           <option value="custom">Custom</option>

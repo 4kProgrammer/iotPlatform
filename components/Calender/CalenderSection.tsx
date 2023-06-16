@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { format, addDays, startOfWeek as getStartOfWeek, isSameDay, isSameMonth, addMonths } from 'date-fns';
 import classNames from 'classnames';
 import { format as formatJalali, newDate as newDateJalali } from 'date-fns-jalali';
 import JalaliDate from "./jalaliDateUtils";
 import { useLanguage } from '../../context/LanguageContext';
 import translate  from '../utils/i18n';
+import { SelectedDayContext } from '../../context/SelectedDayContext';
+
 
 
 
@@ -34,6 +36,7 @@ const Calendar: React.FC<CalendarProps> = ({
   weekendVacations,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const { selectedDay, setSelectedDay } = useContext(SelectedDayContext);
   const [selectedDays, setSelectedDays] = useState<Date[]>([]); 
   const { currentLocale  } = useLanguage();
 
@@ -156,6 +159,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
     const handleDayClick = (day: Date) => {
       setSelectedDays([day]);
+      setSelectedDay(day);
     };
 
 
