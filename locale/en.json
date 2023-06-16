@@ -11,5 +11,17 @@
     "sanitaryTemperature": "Sanitary Temperature",
     "returnTemperature": "Return Temperature",
     "wentTemperature": "Went Temperature",
-    "energyGrade": "Energy Grade"
+    "energyGrade": "Energy Grade",
+    "everyInTimeRangeOption":"Every Week",
+    "doNotRepeat":"Do Not Repeat",
+    "everyDayOfThisYear":"Every Day Of This Year",
+    "everyDayOfThisMonth":"Every Day Of This Month",
+    "everyDayOfThisWeek":"Every Day Of This Week",
+    "everyWeekendDay":"Every Weekend Day",
+    "customOption":"custom Option",
+    "timeRangeTableLable":"Select Time ranges",
+    "selectRepeatOptionLable":"Select one of these options",
+    "addUnofficialHoliday":"اضافه نمودن به عنوان روز تعطیل",
+    "selectUnofficialHoliday":"selectUnofficialHoliday"
+
   }

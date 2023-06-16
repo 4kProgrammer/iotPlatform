@@ -11,5 +11,17 @@
   "sanitaryTemperature": "دمای بهداشتی",
   "returnTemperature": "دمای برگشت",
   "wentTemperature": "دمای رفت",
-  "energyGrade": "رده انرژی"
+  "energyGrade": "رده انرژی",
+  "everyInTimeRangeOption": "هر هفته",
+  "doNotRepeat": "تکرار نشود",
+  "everyDayOfThisYear": "هر روز سال",
+  "everyDayOfThisMonth": "هر روز ماه",
+  "everyDayOfThisWeek": "هرروز هفته",
+  "everyWeekendDay": "همه روزهای آخر هفته",
+  "customOption": "سفارشی",
+  "timeRangeTableLable":"انتخاب بازه های زمانی فعال بودن",
+  "selectRepeatOptionLable":"بازه های زمانی این روز برای چه روزهای دیگری تکرار شود",
+  "addUnofficialHoliday":"اضافه نمودن به عنوان روز تعطیل",
+  "selectUnofficialHoliday":"selectUnofficialHoliday"
+ 
 }

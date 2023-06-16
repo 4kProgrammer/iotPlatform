@@ -159,7 +159,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
     const handleDayClick = (day: Date) => {
       setSelectedDays([day]);
-      setSelectedDay(day);
+      setSelectedDay(day)
     };
 
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useMemo, useContext} from "react";
 import classNames from 'classnames';
 import { SelectedDayContext } from '../../context/SelectedDayContext';
+import { useLanguage } from '../../context/LanguageContext';
+import translate  from '../utils/i18n';
 
 type TimeSlot = {
   hour: number;
@@ -43,6 +45,15 @@ const TimeLimitSection: React.FC = () => {
   const [selectingValue, setSelectingValue] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState('do not repeat');
   const { selectedDay, setSelectedDay } = useContext(SelectedDayContext);
+  const { currentLocale  } = useLanguage();
+
+  const weekdays = useMemo(() => {
+    if (currentLocale === "fa") {
+      return ["یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"];
+    } else {
+      return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    }
+  }, [currentLocale]);
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(e.target.value);
@@ -57,6 +68,7 @@ const TimeLimitSection: React.FC = () => {
    useEffect(() => {
     fetchTimeSlots(selectedDay).then(setTimeSlots);
   }, [selectedDay]);
+
 
 
   // Log and update the time slots when they change
@@ -139,7 +151,7 @@ const TimeLimitSection: React.FC = () => {
 
   return (
     <div className="mt-4 select-none" style={{ minHeight: '700px' }}>
-      <h2 className="text-lg font-semibold mb-2">انتخاب بازه زمانی</h2>
+      <h2 className="text-lg font-semibold mb-2">{translate('timeRangeTableLable', currentLocale)}</h2>
       <div className="relative bg-gray-100 p-4 m-0 p-0 overflow-auto"style={{ maxHeight: '400px' }} >
         {timeSlots.map((slot, index) => {
           const range = ranges.find(({ start, end }) => index >= start && index <= end);
@@ -184,21 +196,20 @@ const TimeLimitSection: React.FC = () => {
         })}
       </div>
       <div className="mt-4">
-        <label htmlFor="repeatOption" className="block mb-2">گزینه های تکرار زمان بندی برای روزهای دیگر</label>
+        <label htmlFor="repeatOption" className="block mb-2">{translate('selectRepeatOptionLable', currentLocale)}</label>
         <select 
           id="repeatOption"
           className="block w-full p-2 border border-gray-300 rounded"
           value={selectedOption} 
           onChange={handleOptionChange}
         >
-          <option value="do not repeat">تکرار نشود</option>
-          <option value="every day of this year">هر روز سال</option>
-          <option value="every day of this month">هر روز ماه</option>
-          <option value="every day of this week">هر روز هفته</option>
-          <option value="every week saturday">هر هفته سه شنبه ها</option>
-          <option value="every working day">هر روز کاری</option>
-          <option value="every weekend day">هر روز آخر هفته ها</option>
-          <option value="custom">Custom</option>
+          <option value="do not repeat">{translate('doNotRepeat', currentLocale)}</option>
+          <option value="every day of this year">{translate('everyDayOfThisYear', currentLocale)}</option>
+          <option value="every day of this month">{translate('everyDayOfThisMonth', currentLocale)}</option>
+          <option value="every day of this week">{translate('everyDayOfThisWeek', currentLocale)}</option>
+          {selectedDay && <option value={`every ${selectedDay.getDay()}`}>{translate('everyInTimeRangeOption', currentLocale)} {weekdays[selectedDay.getDay()]}</option>}          
+          <option value="every weekend day">{translate('everyWeekendDay', currentLocale)}</option>
+          <option value="custom">{translate('customOption', currentLocale)}</option>
         </select>
       </div>
       <div className="mt-4">

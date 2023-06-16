@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from "../components/Layout";
 import CalenderSection from "../components/Calender/CalenderSection";
 import TimeRangeSelection from "../components/Calender/TimeRangeSection";
+import WeekendsSelector from '../components/Calender/WeekendsSelector';
 import { SelectedDayProvider } from '../context/SelectedDayContext';
 
 const schedule: React.FC = () => {
@@ -16,6 +17,7 @@ const schedule: React.FC = () => {
             <TimeRangeSelection />
           </div>
         </div>
+        <WeekendsSelector />
       </Layout>
     </SelectedDayProvider>
   );
