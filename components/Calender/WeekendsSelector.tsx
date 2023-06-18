@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import translate  from '../utils/i18n';
+import translate from '../utils/i18n';
 
 const WeekendsSelector = () => {
   const { currentLocale } = useLanguage();
   const [weekendSelection, setWeekendSelection] = useState([]);
+  const [firstDayOfWeek, setFirstDayOfWeek] = useState(6); // 0 for Sunday, 1 for Monday, etc.
 
   const toggleWeekendSelection = (dayOfWeek) => {
     if (weekendSelection.includes(dayOfWeek)) {
@@ -45,17 +46,23 @@ const WeekendsSelector = () => {
 
   return (
     <div>
-      <h2>{translate('weekendsSelectorTitle', currentLocale)}</h2>
+      <h2>{translate('weekendsSelectorTitle', currentLocale)}</h2>      
       <div>
-        {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day) => (
-          <div
-            key={day}
-            className={`cursor-pointer ${weekendSelection.includes(day) ? 'bg-blue-500' : 'bg-gray-200'} py-2 px-4 m-1 rounded`}
-            onClick={() => toggleWeekendSelection(day)}
-          >
-            {getLocalizedDayOfWeek(day)}
-          </div>
-        ))}
+        {[0, 1, 2, 3, 4, 5, 6].map((dayIndex) => {
+          const dayOfWeek = (dayIndex + firstDayOfWeek) % 7;
+          const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
+          return (
+            <div
+              key={dayIndex}
+              className={`cursor-pointer ${
+                weekendSelection.includes(dayName) ? 'bg-blue-500' : 'bg-gray-200'
+              } py-2 px-4 m-1 rounded`}
+              onClick={() => toggleWeekendSelection(dayName)}
+            >
+              {getLocalizedDayOfWeek(dayName)}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

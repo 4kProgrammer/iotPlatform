@@ -4,12 +4,8 @@ import classNames from 'classnames';
 import { format as formatJalali, newDate as newDateJalali } from 'date-fns-jalali';
 import JalaliDate from "./jalaliDateUtils";
 import { useLanguage } from '../../context/LanguageContext';
-import translate  from '../utils/i18n';
+import translate from '../utils/i18n';
 import { SelectedDayContext } from '../../context/SelectedDayContext';
-
-
-
-
 
 
 type CalendarProps = {
@@ -37,12 +33,12 @@ const Calendar: React.FC<CalendarProps> = ({
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const { selectedDay, setSelectedDay } = useContext(SelectedDayContext);
-  const [selectedDays, setSelectedDays] = useState<Date[]>([]); 
-  const { currentLocale  } = useLanguage();
+  const [selectedDays, setSelectedDays] = useState<Date[]>([]);
+  const { currentLocale } = useLanguage();
 
   const getDaysInMonth = (date: Date) => {
     const days = [];
-    
+
     const jalaliYear = formatJalali(date, 'yyyy');
     const jalaliMonth = formatJalali(date, 'MM');
     const jalaliDay = '01'; // Always set the day to 01 to get the first day of the month
@@ -54,10 +50,10 @@ const Calendar: React.FC<CalendarProps> = ({
     const [gy, gm, gd] = JalaliDate.jalaliToGregorian(year, month, day);
     const gregorianStartDate = new Date(gy, gm - 1, gd);
     const startOfMonth = getStartOfWeek(gregorianStartDate, { weekStartsOn: startOfWeekValue });
-    
+
 
     // Calculate the number of days to include from the previous month
-    const prevMonthDaysCount = (startOfMonth.getDay() + startOfWeekValue) % 7;    
+    const prevMonthDaysCount = (startOfMonth.getDay() + startOfWeekValue) % 7;
     // Get the date for the first day of the displayed week
     const startOfWeek = addDays(startOfMonth, 0);
 
@@ -70,7 +66,7 @@ const Calendar: React.FC<CalendarProps> = ({
     return days;
   };
 
-  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {    
+  const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedJalaliMonthValue = parseInt(event.target.value, 10);
     const [gy, gm, gd] = JalaliDate.jalaliToGregorian(parseInt(formatJalali(currentMonth, 'yyyy'), 10), selectedJalaliMonthValue, parseInt(formatJalali(currentMonth, 'dd'), 10));
     setCurrentMonth(new Date(gy, gm - 1, gd));
@@ -84,11 +80,11 @@ const Calendar: React.FC<CalendarProps> = ({
 
 
   const handlePrevMonth = () => {
-    setCurrentMonth((prevMonth) => addMonths(prevMonth, -1));   
+    setCurrentMonth((prevMonth) => addMonths(prevMonth, -1));
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prevMonth) => addMonths(prevMonth, 1));   
+    setCurrentMonth((prevMonth) => addMonths(prevMonth, 1));
   };
 
   const renderCalendarHeader = () => {
@@ -97,12 +93,12 @@ const Calendar: React.FC<CalendarProps> = ({
       const [gy, gm, gd] = JalaliDate.jalaliToGregorian(1300, month + 1, 1);
       const gregorianSelectedDate = new Date(gy, gm - 1, gd);
       return {
-        index: month+1,
+        index: month + 1,
         value: formatJalali(gregorianSelectedDate, 'MMMM')
       };
     });
 
-    const years = Array.from(Array(100).keys()).map((year) => {      
+    const years = Array.from(Array(100).keys()).map((year) => {
       return {
         index: 1400 + year
       };
@@ -111,7 +107,7 @@ const Calendar: React.FC<CalendarProps> = ({
     return (
       <div className="flex justify-between items-center mb-4">
         <button className="text-gray-500 hover:text-gray-700" onClick={handlePrevMonth}>
-        {translate('prevMonth', currentLocale)}
+          {translate('prevMonth', currentLocale)}
         </button>
         <div className="flex items-center">
           <select value={parseInt(formatJalali(currentMonth, 'MM'), 10)} onChange={handleMonthChange}>
@@ -130,7 +126,7 @@ const Calendar: React.FC<CalendarProps> = ({
           </select>
         </div>
         <button className="text-gray-500 hover:text-gray-700" onClick={handleNextMonth}>
-        {translate('nextMonth', currentLocale)}
+          {translate('nextMonth', currentLocale)}
         </button>
       </div>
     );
@@ -232,6 +228,66 @@ const Calendar: React.FC<CalendarProps> = ({
 
 };
 
+const UnofficialHolidaySection: React.FC<{
+  unofficialHolidays: Date[];
+  onAddUnofficialHoliday: (holiday: Date) => void;
+  onRemoveUnofficialHoliday: (holiday: Date) => void;
+}> = ({ unofficialHolidays, onAddUnofficialHoliday, onRemoveUnofficialHoliday }) => {
+  const { selectedDay } = useContext(SelectedDayContext);
+  const { currentLocale } = useLanguage();
+
+  const handleAddUnofficialHoliday = () => {
+    if (selectedDay) {
+      onAddUnofficialHoliday(selectedDay);
+    }
+  };
+
+  const handleRemoveUnofficialHoliday = (holiday: Date) => {
+    onRemoveUnofficialHoliday(holiday);
+  };
+
+  const formatJalaliDate = (date: Date) => {
+    const jalaliYear = formatJalali(date, 'yyyy');
+    const jalaliMonth = formatJalali(date, 'MM');
+    const jalaliDay = formatJalali(date, 'dd');
+    return `${jalaliYear}/${jalaliMonth}/${jalaliDay}`;
+  };
+
+  return (
+    <div>
+      <h3>{translate('selectUnofficialHoliday', currentLocale)}</h3>
+      <div>
+        <div>{selectedDay && formatJalali(selectedDay, 'MMMM d, yyyy')}</div>
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded mt-2"
+          onClick={handleAddUnofficialHoliday}
+        >
+          {translate('addUnofficialHoliday', currentLocale)}
+        </button>
+      </div>
+      {unofficialHolidays.length > 0 && (
+        <div>
+          <h4>{translate('unofficialHolidays', currentLocale)}</h4>
+          <ul>
+            {unofficialHolidays.map((holiday) => (
+              <li key={holiday.toISOString()}>
+                {formatJalali(holiday, 'MMMM d, yyyy')}{' '}
+                <button
+                  className="bg-red-500 text-white py-1 px-2 rounded ml-2"
+                  onClick={() => handleRemoveUnofficialHoliday(holiday)}
+                >
+                  {translate('remove', currentLocale)}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 const CalenderSection: React.FC = () => {
   // Define the start of the week (0 for Sunday, 1 for Monday, etc.)
   const startOfWeek: 0 | 2 | 1 | 5 | 3 | 4 | 6 = 6;
@@ -242,7 +298,7 @@ const CalenderSection: React.FC = () => {
     // Add more holidays with day and month values
   ];
 
-  const unofficialHolidays = [new Date('2023-06-07')];
+  //const unofficialHolidays = [new Date('2023-06-07')];
 
   // Define weekend vacations
   const weekendVacations = [
@@ -252,6 +308,22 @@ const CalenderSection: React.FC = () => {
     }
   ];
 
+
+
+  const [unofficialHolidays, setUnofficialHolidays] = useState<Date[]>([]);
+
+  const handleAddUnofficialHoliday = (holiday: Date) => {
+    const isHolidayExist = unofficialHolidays.some((date) => isSameDay(date, holiday));
+    if (!isHolidayExist) {
+      setUnofficialHolidays((prevHolidays) => [...prevHolidays, holiday]);
+    }
+  };
+  
+
+  const handleRemoveUnofficialHoliday = (holiday: Date) => {
+    setUnofficialHolidays((prevHolidays) => prevHolidays.filter((date) => !isSameDay(date, holiday)));
+  };
+
   return (
     <div className="aspect-w-16 aspect-h-9 aspect-content">
       <Calendar
@@ -260,9 +332,13 @@ const CalenderSection: React.FC = () => {
         unofficialHolidays={unofficialHolidays}
         weekendVacations={weekendVacations}
       />
+      <UnofficialHolidaySection
+        unofficialHolidays={unofficialHolidays}
+        onAddUnofficialHoliday={handleAddUnofficialHoliday}
+        onRemoveUnofficialHoliday={handleRemoveUnofficialHoliday}
+      />
     </div>
   );
-  
 };
 
 export default CalenderSection;
