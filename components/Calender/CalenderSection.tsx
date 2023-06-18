@@ -12,7 +12,7 @@ type CalendarProps = {
   startOfWeek: 0 | 2 | 1 | 5 | 3 | 4 | 6; // 0 for Sunday, 1 for Monday, etc.
   officialHolidays: Holiday[];
   unofficialHolidays: Date[];
-  weekendVacations: { name: string; daysOfWeek: number[] }[]; // Array of weekend vacations
+  weekendVacations: { name: string; daysOfWeek: number[] }; // Array of weekend vacations
 };
 
 type Holiday = {
@@ -211,9 +211,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const isWeekendVacation = (date: Date) => {
     const dayOfWeek = date.getDay();
-    return weekendVacations.some((vacation) =>
-      vacation.daysOfWeek.includes(dayOfWeek)
-    );
+    return weekendVacations.daysOfWeek.includes(dayOfWeek);
   };
 
   return (
@@ -301,12 +299,11 @@ const CalenderSection: React.FC = () => {
   //const unofficialHolidays = [new Date('2023-06-07')];
 
   // Define weekend vacations
-  const weekendVacations = [
-    {
-      name: 'Weekend Vacation 1',
-      daysOfWeek: [4, 5], // 
-    }
-  ];
+  const weekendVacations =
+  {
+    name: 'Weekend Vacation 1',
+    daysOfWeek: [4, 5], // 
+  };
 
 
 
@@ -318,7 +315,7 @@ const CalenderSection: React.FC = () => {
       setUnofficialHolidays((prevHolidays) => [...prevHolidays, holiday]);
     }
   };
-  
+
 
   const handleRemoveUnofficialHoliday = (holiday: Date) => {
     setUnofficialHolidays((prevHolidays) => prevHolidays.filter((date) => !isSameDay(date, holiday)));
