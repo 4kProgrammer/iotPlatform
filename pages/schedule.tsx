@@ -2,11 +2,12 @@ import React from 'react';
 import Layout from "../components/Layout";
 import CalenderSection from "../components/Calender/CalenderSection";
 import TimeRangeSelection from "../components/Calender/TimeRangeSection";
-import WeekendsSelector from '../components/Calender/WeekendsSelector';
 import FeatureSettings from '../components/Calender/FeatureSettings';
 import { SelectedDayProvider } from '../context/SelectedDayContext';
 
 const schedule: React.FC = () => {
+  const isRun24Hour = true;
+
   return (
     <SelectedDayProvider>
       <Layout>
@@ -18,8 +19,7 @@ const schedule: React.FC = () => {
             <TimeRangeSelection />
           </div>
         </div>
-        <WeekendsSelector />
-        <FeatureSettings />
+        <FeatureSettings />       
       </Layout>
     </SelectedDayProvider>
   );

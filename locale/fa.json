@@ -22,6 +22,8 @@
   "timeRangeTableLable":"انتخاب بازه های زمانی فعال بودن",
   "selectRepeatOptionLable":"بازه های زمانی این روز برای چه روزهای دیگری تکرار شود",
   "addUnofficialHoliday":"اضافه نمودن به عنوان روز تعطیل",
-  "selectUnofficialHoliday":"selectUnofficialHoliday"
+  "selectUnofficialHoliday":"افزودن روز تعطیل",
+  "24HourRun":"کارکرد 24 ساعته ",
+  "temperatureSettingsPageButton":"تنظیم دما"
  
 }

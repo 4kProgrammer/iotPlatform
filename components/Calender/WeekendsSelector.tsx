@@ -1,13 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import translate from '../utils/i18n';
 
-const WeekendsSelector = () => {
-  const { currentLocale } = useLanguage();
-  const [weekendSelection, setWeekendSelection] = useState([]);
-  const [firstDayOfWeek, setFirstDayOfWeek] = useState(6); // 0 for Sunday, 1 for Monday, etc.
+type WeekendsSelectorProps = {
+  weekends: number[];
+  onWeekendChange: (selectedWeekends: number[]) => void;
+};
 
-  const toggleWeekendSelection = (dayOfWeek) => {
+const WeekendsSelector: React.FC<WeekendsSelectorProps> = ({ weekends, onWeekendChange }) => {
+  const { currentLocale } = useLanguage();
+  const [weekendSelection, setWeekendSelection] = useState<number[]>(weekends || []);
+
+  useEffect(() => {
+    if (typeof onWeekendChange === 'function') {
+      onWeekendChange(weekendSelection);
+    } else {
+      console.error('onWeekendChange is not a function. It is:', typeof onWeekendChange);
+    }
+  }, [weekendSelection]);
+
+  const toggleWeekendSelection = (dayOfWeek: number) => {
     if (weekendSelection.includes(dayOfWeek)) {
       // Deselect the day if it was already selected
       setWeekendSelection(weekendSelection.filter((day) => day !== dayOfWeek));
@@ -17,52 +29,51 @@ const WeekendsSelector = () => {
     }
   };
 
-  const getLocalizedDayOfWeek = (dayOfWeek) => {
+  const getLocalizedDayOfWeek = (dayOfWeek: number) => {
     if (currentLocale === 'fa') {
       // Map English day of week to Persian
       switch (dayOfWeek) {
-        case 'Sunday':
+        case 0:
           return 'یکشنبه';
-        case 'Monday':
+        case 1:
           return 'دوشنبه';
-        case 'Tuesday':
+        case 2:
           return 'سه‌شنبه';
-        case 'Wednesday':
+        case 3:
           return 'چهارشنبه';
-        case 'Thursday':
+        case 4:
           return 'پنج‌شنبه';
-        case 'Friday':
+        case 5:
           return 'جمعه';
-        case 'Saturday':
+        case 6:
           return 'شنبه';
         default:
           return '';
       }
     } else {
       // Return English day of week
-      return dayOfWeek;
+      return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
     }
   };
 
+  const firstDayOfWeek = 6; // Change this to set the first day of the week. 0 is Sunday, 1 is Monday, and so on.
+  const daysOfWeek = Array.from({length: 7}, (_, i) => (firstDayOfWeek + i) % 7);
+
   return (
     <div>
-      <h2>{translate('weekendsSelectorTitle', currentLocale)}</h2>      
-      <div>
-        {[0, 1, 2, 3, 4, 5, 6].map((dayIndex) => {
-          const dayOfWeek = (dayIndex + firstDayOfWeek) % 7;
-          const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
-          return (
-            <div
-              key={dayIndex}
-              className={`cursor-pointer ${
-                weekendSelection.includes(dayName) ? 'bg-blue-500' : 'bg-gray-200'
-              } py-2 px-4 m-1 rounded`}
-              onClick={() => toggleWeekendSelection(dayName)}
-            >
-              {getLocalizedDayOfWeek(dayName)}
-            </div>
-          );
-        })}
+      <h2>{translate('weekendsSelectorTitle', currentLocale)}</h2>
+      <div className="flex">
+        {daysOfWeek.map((dayOfWeek) => (
+          <div
+            key={dayOfWeek}
+            className={`cursor-pointer min-w-[100px] ${
+              weekendSelection.includes(dayOfWeek) ? 'bg-red-500' : 'bg-gray-200'
+            } py-2 px-4 m-1 rounded`}
+            onClick={() => toggleWeekendSelection(dayOfWeek)}
+          >
+            {getLocalizedDayOfWeek(dayOfWeek)}
+          </div>
+        ))}
       </div>
     </div>
   );

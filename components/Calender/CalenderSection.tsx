@@ -3,6 +3,8 @@ import { format, addDays, startOfWeek as getStartOfWeek, isSameDay, isSameMonth,
 import classNames from 'classnames';
 import { format as formatJalali, newDate as newDateJalali } from 'date-fns-jalali';
 import JalaliDate from "./jalaliDateUtils";
+import WeekendsSelector from "./WeekendsSelector";
+
 import { useLanguage } from '../../context/LanguageContext';
 import translate from '../utils/i18n';
 import { SelectedDayContext } from '../../context/SelectedDayContext';
@@ -12,7 +14,7 @@ type CalendarProps = {
   startOfWeek: 0 | 2 | 1 | 5 | 3 | 4 | 6; // 0 for Sunday, 1 for Monday, etc.
   officialHolidays: Holiday[];
   unofficialHolidays: Date[];
-  weekendVacations: { name: string; daysOfWeek: number[] }; // Array of weekend vacations
+  weekendVacations: number[]; // Array of weekend vacations
 };
 
 type Holiday = {
@@ -211,7 +213,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const isWeekendVacation = (date: Date) => {
     const dayOfWeek = date.getDay();
-    return weekendVacations.daysOfWeek.includes(dayOfWeek);
+    return weekendVacations.includes(dayOfWeek);
   };
 
   return (
@@ -296,16 +298,11 @@ const CalenderSection: React.FC = () => {
     // Add more holidays with day and month values
   ];
 
-  //const unofficialHolidays = [new Date('2023-06-07')];
+  const [weekendSelection, setWeekendSelection] = useState<number[]>([4, 5]);
 
-  // Define weekend vacations
-  const weekendVacations =
-  {
-    name: 'Weekend Vacation 1',
-    daysOfWeek: [4, 5], // 
+  const handleWeekendChange = (selectedWeekends: number[]) => {
+    setWeekendSelection(selectedWeekends);
   };
-
-
 
   const [unofficialHolidays, setUnofficialHolidays] = useState<Date[]>([]);
 
@@ -315,7 +312,6 @@ const CalenderSection: React.FC = () => {
       setUnofficialHolidays((prevHolidays) => [...prevHolidays, holiday]);
     }
   };
-
 
   const handleRemoveUnofficialHoliday = (holiday: Date) => {
     setUnofficialHolidays((prevHolidays) => prevHolidays.filter((date) => !isSameDay(date, holiday)));
@@ -327,13 +323,15 @@ const CalenderSection: React.FC = () => {
         startOfWeek={startOfWeek}
         officialHolidays={officialHolidays}
         unofficialHolidays={unofficialHolidays}
-        weekendVacations={weekendVacations}
+        weekendVacations={weekendSelection}
       />
       <UnofficialHolidaySection
         unofficialHolidays={unofficialHolidays}
         onAddUnofficialHoliday={handleAddUnofficialHoliday}
         onRemoveUnofficialHoliday={handleRemoveUnofficialHoliday}
       />
+      <WeekendsSelector weekends={weekendSelection} onWeekendChange={handleWeekendChange} />
+    
     </div>
   );
 };
